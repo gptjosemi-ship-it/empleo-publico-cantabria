@@ -14,16 +14,16 @@ async function cargarDatos() {
 
     datos.forEach(item => {
       const fechaConvocatoria = new Date(item.fecha);
-      const diferenciaMeses =
+      const diferenciaDias = (hoy - fechaConvocatoria) / (1000 * 60 * 60 * 24);
         (hoy.getFullYear() - fechaConvocatoria.getFullYear()) * 12 +
         (hoy.getMonth() - fechaConvocatoria.getMonth());
 
       // APLICAR FILTRO
       if (
-        filtro === "todas" ||
-        (filtro === "1" && diferenciaMeses <= 1) ||
-        (filtro === "6" && diferenciaMeses <= 6)
-      ) {
+  filtro === "todas" ||
+  (filtro === "1" && diferenciaDias <= 30) ||
+  (filtro === "6" && diferenciaDias <= 180)
+) {
         contenedor.innerHTML += `
           <p>
             <strong>${item.titulo}</strong><br>
