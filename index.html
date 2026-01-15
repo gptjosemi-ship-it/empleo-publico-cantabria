@@ -7,6 +7,14 @@
 <body>
 <h1>Convocatorias de empleo público en Cantabria</h1>
 <button onclick="cargarDatos()">Actualizar búsqueda</button>
+  <div id="filtros">
+<label for="filtroFecha">Mostrar:</label>
+<select id="filtroFecha" onchange="aplicarFiltro()">
+<option value="todas">Todas</option>
+<option value="1">Último mes</option>
+<option value="6">Últimos 6 meses</option>
+</select>
+</div>
 <div id="resultados"></div>
 <script src="script.js"></script>
 </body>
