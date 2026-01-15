@@ -1,9 +1,8 @@
 async function cargarDatos() {
   const contenedor = document.getElementById("resultados");
-  contenedor.innerHTML = "Cargando convocatorias...";
-
   const filtro = document.getElementById("filtroFecha").value;
-  const hoy = new Date();
+
+  contenedor.innerHTML = "Cargando convocatorias...";
 
   try {
     const respuesta = await fetch("datos.json");
@@ -11,14 +10,19 @@ async function cargarDatos() {
 
     contenedor.innerHTML = "";
 
-    datos.forEach(item => {
-      const fechaItem = new Date(item.fecha);
-      const diferenciaDias = (hoy - fechaItem) / (1000 * 60 * 60 * 24);
+    const hoy = new Date();
 
+    datos.forEach(item => {
+      const fechaConvocatoria = new Date(item.fecha);
+      const diferenciaMeses =
+        (hoy.getFullYear() - fechaConvocatoria.getFullYear()) * 12 +
+        (hoy.getMonth() - fechaConvocatoria.getMonth());
+
+      // APLICAR FILTRO
       if (
         filtro === "todas" ||
-        (filtro === "1mes" && diferenciaDias <= 30) ||
-        (filtro === "6meses" && diferenciaDias <= 180)
+        (filtro === "1" && diferenciaMeses <= 1) ||
+        (filtro === "6" && diferenciaMeses <= 6)
       ) {
         contenedor.innerHTML += `
           <p>
@@ -29,42 +33,7 @@ async function cargarDatos() {
         `;
       }
     });
-  } catch (error) {
-    contenedor.innerHTML = "Error al cargar los datos.";
-  }
-}
 
-// === FILTRO DE FECHAS ===
-const filtro = document.getElementById("filtroFecha")?.value || "todas";
-const hoy = new Date();
-
-let datosFiltrados = datos;
-
-if (filtro === "1mes") {
-  datosFiltrados = datos.filter(item => {
-    const fecha = new Date(item.fecha);
-    return (hoy - fecha) / (1000 * 60 * 60 * 24) <= 30;
-  });
-}
-
-if (filtro === "6meses") {
-  datosFiltrados = datos.filter(item => {
-    const fecha = new Date(item.fecha);
-    return (hoy - fecha) / (1000 * 60 * 60 * 24) <= 180;
-  });
-}
-
-// === MOSTRAR RESULTADOS ===
-datosFiltrados.forEach(item => {
-
-      contenedor.innerHTML += `
-        <p>
-          <strong>${item.titulo}</strong><br>
-          ${item.entidad} – ${item.fecha}<br>
-          <a href="${item.enlace}" target="_blank">Ver convocatoria</a>
-        </p>
-      `;
-    });
   } catch (error) {
     contenedor.innerHTML = "Error al cargar los datos.";
   }
