@@ -1,0 +1,27 @@
+name: Vigilancia empleo publico Cantabria
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 10 * * *"
+      timezone: "Europe/Madrid"
+
+jobs:
+  vigilancia:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Ejecutar vigilancia y enviar a Telegram
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python scripts/vigilancia_empleo_cantabria.py
